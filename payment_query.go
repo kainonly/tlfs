@@ -8,7 +8,7 @@ import (
 )
 
 type PaymentQueryDto struct {
-	StoreId string `json:"storeId"`
+	StoreId string `json:"storeId"` // 门店唯一标识
 }
 
 func NewPaymentQueryDto(storeId string) *PaymentQueryDto {

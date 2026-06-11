@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
 	"sort"
 	"strings"
 	"time"
@@ -24,7 +23,6 @@ type Option struct {
 	OrgID   string `yaml:"org_id"`
 	AppID   string `yaml:"app_id"`
 	Key     string `yaml:"key"`
-	StoreId string `yaml:"store_id"`
 }
 
 func NewTlfs(opt Option) (x *Tlfs, err error) {
@@ -45,33 +43,40 @@ func (x *Tlfs) GetNow(ctx context.Context) time.Time {
 	return ctx.Value("now").(time.Time)
 }
 
-type ResponseBody struct {
+type ResponseBody[T any] struct {
 	Code string `json:"code"`           // 调用结果返回码
 	Msg  string `json:"msg"`            // 调用结果返回码描述
 	Sign string `json:"sign,omitempty"` // 商户请求参数的签名串
-	Data string `json:"data,omitempty"` // 返回参数的集合
+	Data T      `json:"data,omitempty"` // 返回参数的集合
 }
 
-func (x *Tlfs) Request(ctx context.Context, path string, data string) (_ string, err error) {
+func (x *Tlfs) Request(ctx context.Context, path string, content string) (_ []byte, err error) {
 	now := x.GetNow(ctx)
-	body := map[string]string{
-		"version":   "1.0",
-		"charset":   "utf-8",
-		"timestamp": now.Format(`20060102150405`),
-		"appId":     x.Option.AppID,
-		"signType":  "MD5",
-		"bizData":   data,
+	data := map[string]string{
+		"version":    "1.0",
+		"charset":    "utf-8",
+		"timestamp":  now.Format(`20060102150405`),
+		"appId":      x.Option.AppID,
+		"bizContent": content,
 	}
 
 	if x.Option.OrgID != "" {
-		body["orgId"] = x.Option.OrgID
+		data["orgId"] = x.Option.OrgID
 	}
 
-	body["sign"], err = x.Sign(body)
+	data["sign"], err = x.Sign(data)
+	if err != nil {
+		return
+	}
+
+	var body string
+	if body, err = sonic.MarshalString(data); err != nil {
+		return
+	}
 
 	var resp *resty.Response
-	if resp, err = x.Client.R().
-		SetContext(ctx).
+	if resp, err = x.Client.R().SetContext(ctx).
+		SetHeader("Content-Type", "application/json; charset=utf-8").
 		SetBody(body).
 		Post(path); err != nil {
 		return
@@ -81,27 +86,22 @@ func (x *Tlfs) Request(ctx context.Context, path string, data string) (_ string,
 		err = help.E(0, resp.String())
 		return
 	}
-	var content M
-	if err = sonic.Unmarshal(resp.Bytes(), &content); err != nil {
-		return
-	}
 
-	if content["code"] != "00000" {
-		err = help.E(0, fmt.Sprintf(`第三方请求失败![%s]: %s`, content["code"], content["msg"]))
-		return
-	}
-
-	delete(content, "sign")
-	delete(content, "signType")
-
-	return content["bizData"].(string), nil
+	return resp.Bytes(), nil
 }
 
 func (x *Tlfs) Sign(params map[string]string) (sign string, err error) {
+	normalized := make(map[string]string, len(params))
 	keys := make([]string, 0, len(params))
-	for k, _ := range params {
+	for k, v := range params {
+		if v == "" || strings.EqualFold(v, "null") {
+			continue
+		}
 		k = strings.ToLower(k)
-		keys = append(keys, k)
+		if _, exists := normalized[k]; !exists {
+			keys = append(keys, k)
+		}
+		normalized[k] = v
 	}
 	sort.Strings(keys)
 
@@ -112,9 +112,12 @@ func (x *Tlfs) Sign(params map[string]string) (sign string, err error) {
 		}
 		sb.WriteString(k)
 		sb.WriteByte('=')
-		sb.WriteString(params[k])
+		sb.WriteString(normalized[k])
 	}
-	sb.WriteString("&key=")
+	if sb.Len() > 0 {
+		sb.WriteByte('&')
+	}
+	sb.WriteString("key=")
 	sb.WriteString(x.Option.Key)
 
 	signContent := sb.String()

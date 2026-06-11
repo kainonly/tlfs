@@ -10,10 +10,17 @@ import (
 
 func TestPaymentQuery(t *testing.T) {
 	ctx := context.TODO()
-	dto := tlfs.NewPaymentQueryDto(x.Option.StoreId)
+	dto := tlfs.NewPaymentQueryDto(x.Option.AppID)
 
 	r, err := x.PaymentQuery(ctx, dto)
 	assert.NoError(t, err)
 
-	t.Log(r.Result)
+	for _, v := range r.List {
+		t.Log(`storeId:`, v.StoreId)
+		t.Log(`paymentId:`, v.PaymentId)
+		t.Log(`paymentName:`, v.PaymentName)
+		t.Log(`dataStatus:`, v.DataStatus)
+		t.Log(`type:`, v.Type)
+		t.Log(`createdDate:`, v.CreatedDate)
+	}
 }

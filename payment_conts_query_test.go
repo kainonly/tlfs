@@ -10,10 +10,31 @@ import (
 
 func TestPaymentContsQuery(t *testing.T) {
 	ctx := context.TODO()
-	dto := tlfs.NewPaymentContsQueryDto(x.Option.StoreId, ``)
+	dto := tlfs.NewPaymentContsQueryDto(x.Option.AppID, `9de60b130b46427b880104e388a932a6`)
 
 	r, err := x.PaymentContsQuery(ctx, dto)
 	assert.NoError(t, err)
 
-	t.Log(r.Result)
+	t.Log(r.StoreId)
+	t.Log(r.PaymentId)
+
+	for _, v := range r.Conts {
+		t.Log(`name:`, v.Name)
+		t.Log(`type:`, v.Type)
+		t.Log(`sort:`, v.Sort)
+		t.Log(`tip:`, v.Tip)
+		t.Log(`descr:`, v.Descr)
+		t.Log(`data:`, v.Data)
+		t.Log(`value:`, v.Value)
+		t.Log(`deposit:`, v.Deposit)
+		t.Log(`searchRequired:`, v.SearchRequired)
+		t.Log(`receivedRequired:`, v.ReceivedRequired)
+		t.Log(`foldRequired:`, v.FoldRequired)
+		t.Log(`mulPickerRequired:`, v.MulPickerRequired)
+		t.Log(`smsCodeRequired:`, v.SmsCodeRequired)
+		t.Log(`requireDeposit:`, v.RequireDeposit)
+		t.Log(`scanRequired:`, v.ScanRequired)
+		t.Log(`fixAmountRequired:`, v.FixAmountRequired)
+		t.Log(`desensitized:`, v.Desensitized)
+	}
 }

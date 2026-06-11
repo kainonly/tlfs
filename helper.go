@@ -1,8 +1,6 @@
 package tlfs
 
 import (
-	"net/url"
-
 	"github.com/bytedance/sonic"
 )
 
@@ -28,11 +26,9 @@ func (x *Tlfs) PayRedirectURL(dto *PayRedirectURLDto) (_ string, err error) {
 	if fontsMap, err = sonic.MarshalString(dto.FontsMap); err != nil {
 		return
 	}
-	params := url.Values{}
-	params.Set("id", dto.Id)
-	params.Set("sellerId", dto.SellerId)
-	params.Set("enterType", dto.EnterType)
-	params.Set("amount", dto.Amount)
-	params.Set("fontsMap", fontsMap)
-	return x.Option.BaseURL + "/payment/views/payment.html?" + params.Encode(), nil
+	return x.Option.BaseURL + "/payment/views/payment.html?id=" + dto.Id +
+		"&sellerId=" + dto.SellerId +
+		"&enterType=" + dto.EnterType +
+		"&amount=" + dto.Amount +
+		"&fontsMap=" + fontsMap, nil
 }

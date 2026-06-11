@@ -10,7 +10,7 @@ import (
 
 func TestPaymentContsQuery(t *testing.T) {
 	ctx := context.TODO()
-	dto := tlfs.NewPaymentContsQueryDto(x.Option.AppID, `9de60b130b46427b880104e388a932a6`)
+	dto := tlfs.NewPaymentContsQueryDto(x.Option.AppID, `c6d30374458c404ab631a69db686c132`)
 
 	r, err := x.PaymentContsQuery(ctx, dto)
 	assert.NoError(t, err)
@@ -18,7 +18,8 @@ func TestPaymentContsQuery(t *testing.T) {
 	t.Log(r.StoreId)
 	t.Log(r.PaymentId)
 
-	for _, v := range r.Conts {
+	for i, v := range r.Conts {
+		t.Logf(`==== %d ====`, i)
 		t.Log(`name:`, v.Name)
 		t.Log(`type:`, v.Type)
 		t.Log(`sort:`, v.Sort)

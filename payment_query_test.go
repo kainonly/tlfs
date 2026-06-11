@@ -15,7 +15,8 @@ func TestPaymentQuery(t *testing.T) {
 	r, err := x.PaymentQuery(ctx, dto)
 	assert.NoError(t, err)
 
-	for _, v := range r.List {
+	for i, v := range r.List {
+		t.Logf(`==== %d ====`, i)
 		t.Log(`storeId:`, v.StoreId)
 		t.Log(`paymentId:`, v.PaymentId)
 		t.Log(`paymentName:`, v.PaymentName)

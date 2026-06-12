@@ -25,6 +25,7 @@ type PaymentContsQueryResult struct {
 }
 
 type PaymentContsQueryCont struct {
+	ID                string `json:"id"`
 	Name              string `json:"name"`              // 信息项名称
 	Type              string `json:"type"`              // 类型
 	Sort              int    `json:"sort"`              // 排序

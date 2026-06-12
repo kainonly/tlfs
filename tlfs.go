@@ -19,10 +19,11 @@ type Tlfs struct {
 }
 
 type Option struct {
-	BaseURL string `yaml:"base_url"`
-	OrgID   string `yaml:"org_id"`
-	AppID   string `yaml:"app_id"`
-	Key     string `yaml:"key"`
+	BaseURL  string `yaml:"base_url"`
+	OrgID    string `yaml:"org_id"`
+	AppID    string `yaml:"app_id"`
+	Key      string `yaml:"key"`
+	SellerID string `yaml:"seller_id"`
 }
 
 func NewTlfs(opt Option) (x *Tlfs, err error) {

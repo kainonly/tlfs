@@ -20,6 +20,7 @@ func TestPaymentContsQuery(t *testing.T) {
 
 	for i, v := range r.Conts {
 		t.Logf(`==== %d ====`, i)
+		t.Log(`id:`, v.ID)
 		t.Log(`name:`, v.Name)
 		t.Log(`type:`, v.Type)
 		t.Log(`sort:`, v.Sort)

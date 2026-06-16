@@ -1,6 +1,6 @@
 # tlfs
 
-`tlfs` 是一个 TLFS 的 Go SDK，提供：
+`tlfs` 是通联飞收的 Go SDK，提供：
 
 - 查询收款单列表
 - 查询收款单表单项

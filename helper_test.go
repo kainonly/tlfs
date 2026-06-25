@@ -9,13 +9,13 @@ import (
 
 func TestPayRedirectURL(t *testing.T) {
 	dto := &tlfs.PayRedirectURLDto{
-		Id:        "c6d30374458c404ab631a69db686c132",
+		Id:        opt.PaymentID,
 		SellerId:  x.Option.SellerID,
 		EnterType: "1",
 		Amount:    "3",
 		FontsMap: []*tlfs.FontsMapItem{
-			tlfs.NewFontsMapItem("c95ca51a373244aeb1578317d0a9d488", "81107"),
-			tlfs.NewFontsMapItem("0b530118efd14b0b9c538127479c859b", "Kain"),
+			tlfs.NewFontsMapItem("2af57f6c7a8e4da9be5a9a4099cf5384", "81107"),
+			tlfs.NewFontsMapItem("3a5fa1073920469096542e59b6e42a36", "Kain"),
 		},
 	}
 

@@ -2,4 +2,5 @@ base_url: https://fstest.allinpaygd.com
 org_id:
 app_id:
 key:
+payment_id:
 seller_id:

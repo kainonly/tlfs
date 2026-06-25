@@ -10,7 +10,7 @@ import (
 
 func TestPaymentContsQuery(t *testing.T) {
 	ctx := context.TODO()
-	dto := tlfs.NewPaymentContsQueryDto(x.Option.AppID, `c6d30374458c404ab631a69db686c132`)
+	dto := tlfs.NewPaymentContsQueryDto(x.Option.AppID, opt.PaymentID)
 
 	r, err := x.PaymentContsQuery(ctx, dto)
 	assert.NoError(t, err)

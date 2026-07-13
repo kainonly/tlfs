@@ -16,6 +16,7 @@ func TestPayRedirectURL(t *testing.T) {
 		FontsMap: []*tlfs.FontsMapItem{
 			tlfs.NewFontsMapItem("2af57f6c7a8e4da9be5a9a4099cf5384", "81107"),
 			tlfs.NewFontsMapItem("3a5fa1073920469096542e59b6e42a36", "Kain"),
+			tlfs.NewFontsMapItem("f578c6580bc14860b6f16fdd2bc0125d", "15501875910"),
 		},
 	}
 

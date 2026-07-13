@@ -15,12 +15,18 @@ type PayRedirectURLDto struct {
 }
 
 type FontsMapItem struct {
-	Id    string `json:"id"`    // 表单项id
-	Value string `json:"value"` // 值
+	Id       string `json:"id"`                 // 表单项id
+	Value    string `json:"value"`              // 值
+	Disabled string `json:"disabled,omitempty"` // 禁用属性
 }
 
 func NewFontsMapItem(id, value string) *FontsMapItem {
 	return &FontsMapItem{Id: id, Value: value}
+}
+
+func (x *FontsMapItem) SetDisabled() *FontsMapItem {
+	x.Disabled = "1"
+	return x
 }
 
 func (x *Tlfs) PayRedirectURL(dto *PayRedirectURLDto) (_ string, err error) {
